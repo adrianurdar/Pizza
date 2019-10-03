@@ -47,4 +47,4 @@ Restaurant managers(admin users) can view today's recently placed orders and upd
 [reviews/tests.py](https://github.com/samyka/Pizzeria/blob/master/reviews/tests.py)
 
 
-### Screen recording [here](https://youtu.be/XvYri7D-BSs)
+### Screencast presentation [here](https://youtu.be/XvYri7D-BSs)
