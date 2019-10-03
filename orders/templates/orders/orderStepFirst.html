@@ -1,0 +1,87 @@
+{% extends "base_orders.html" %}
+
+{% block head %}
+{% load static %}
+<script src="{% static 'orders/js/order.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+<h1>Order Confirmation</h1>
+
+{% if cartitem_list %}
+<table class="table">
+    <colgroup>
+        <col width="30%"></col>
+        <col width="10%"></col>
+        <col width="10%"></col>
+        <col width="10%"></col>
+        <col width="30%"></col>
+        <col width="10%"></col>
+    </colgroup>
+    <thread>
+        <tr>
+            <th>Item</th>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Option</th>
+            <td></td>
+        </tr>
+    </thread>
+    <tbody>
+        {% for cartitem in cartitem_list %}
+        <tr>
+            <td>{% if cartitem.item.pizza.crust %}{{ cartitem.item.pizza.crust}} Pizza with {% endif %}
+                {{ cartitem.item.name }}</td>
+            <td>{{ cartitem.item.size }}</td>
+            <td>{{ cartitem.quantity }}</td>
+            <td>{{ cartitem.price }}</td>
+            <td>{% if cartitem.toppings.count > 0 %}
+                    {% for topping in cartitem.toppings.all %}
+                        {% if forloop.last %}
+                            {{ topping.name }}
+                        {% else %}
+                            {{ topping.name }},
+                        {% endif %}
+                    {% endfor %}
+                    {% elif cartitem.extra %}
+                        + Extra Cheese
+                {% endif %}</td>
+            <td></td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+<h3 class="text-right">Subtotal: {{ subtotal }}</h3>
+{% else %}
+    <h3>No items in the cart.</h3>
+{% endif %}
+
+<form id="next" action="{% url 'order_confirm' %}", method="POST">
+{% csrf_token %}
+    <div class="form-group">
+        <input hidden name="user_id" value="{{ request.user.id }}">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Contact</label>
+        <input class="form-control" name="contact" placeholder="Phone Number">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Billing Address</label>
+        <input class="form-control" name="billing_address" placeholder="Billing Address">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Shipping Address</label>
+        <input class="form-control" name="shipping_address" placeholder="Shipping Address">
+    </div>
+    <div class="form-group">
+        <label for="exampleInputEmail1">Leave the message (optional)</label>
+        <input class="form-control" name="message" placeholder="Message">
+        <small class="form-text text-muted">Maximum length of character is 50.</small>
+    </div>
+    <div class="form-group row justify-content-end">
+        <input type="submit" value="Next" class="btn btn-info">
+    </div>
+</form>
+
+{% endblock %}

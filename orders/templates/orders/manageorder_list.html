@@ -1,0 +1,107 @@
+{% extends "base_orders.html" %}
+
+{% block head %}
+{% load static %}
+<script src="{% static 'orders/js/manageorder_list.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+
+<h1>{{ today }}</h1>
+
+<br>
+<h1>Recently Ordered</h1>
+<table class="table">
+    <colgroup>
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+    </colgroup>
+    <thread>
+        <tr>
+            <th>Order Placed</th>
+            <th>Customer</th>
+            <th>Subtotal</th>
+            <th>Status</th>
+            <th>Complete</th>
+        </tr>
+    </thread>
+    <tbody>
+        {% for order in order_list_not_recieved %}
+        {% if not order.recieved %}
+            <tr>
+                <td>{{ order.order_time }}</td>
+                <td><a href="{% url 'manage_order_detail' order.id %}">{{ order.user.username }}</a></td>
+                <td>{{ order.subtotal }}</td>
+                <td>{{ order.status }}</td>
+                <td>
+                    <form class="update_status" action="{% url 'manage_order' %}", method="POST">
+                    {% csrf_token %}
+                    <input hidden name="order_id" value="{{ order.id }}">
+                    <div class="input-group">    
+                        <select class="custom-select" name="status">
+                            {% if order.status == 'Ordered' %}
+                                <option selected value="On Shipping">On Shipping</option>
+                                <option value="Delivered">Delivered</option>
+                            {% else %}
+                                <option value="On Shipping">On Shipping</option>
+                                <option selected value="Delivered">Delivered</option>
+                            {% endif %}
+                        </select>
+                        <div class="input-group-append">
+                            <input class="btn btn-outline-info" type="submit" value="Update">
+                        </div>
+                    </div>
+                    </form>
+                </td>
+            </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+{% if not order_list_not_recieved %}
+<h3>No orders have been made.</h3>
+{% endif %}
+
+<br>
+<h1>Completed Orders</h1>
+<table class="table">
+    <colgroup>
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+        <col width="20%">
+    </colgroup>
+    <thread>
+        <tr>
+            <th>Order Placed</th>
+            <th>Detail</th>
+            <th>Subtotal</th>
+            <th>Status</th>
+            <th>Complete</th>
+        </tr>
+    </thread>
+    <tbody>
+        {% for order in order_list %}
+        {% if order.recieved %}
+            <tr>
+                <td>{{ order.order_time }}</td>
+                <td><a href="{% url 'manage_order_detail' order.id %}">Detail</a></td>
+                <td>{{ order.subtotal }}</td>
+                <td>{{ order.status }}</td>
+                <td>Recieved</td>
+            </tr>
+        {% endif %}
+        {% endfor %}
+    </tbody>
+</table>
+
+<div class="row">
+    <a href="{% url 'index' %}" class="btn btn-outline-info">Go back to menu.</a>
+</div>
+
+{% endblock %}

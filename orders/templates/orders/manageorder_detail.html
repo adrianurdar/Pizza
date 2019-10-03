@@ -1,0 +1,90 @@
+{% extends "base_orders.html" %}
+
+{% block content %}
+
+{% if order %}
+<h1>Order Information</h1>
+<table class="table">
+    <colgroup>
+        <col width="35%">
+        <col width="10%">
+        <col width="10%">
+        <col width="10%">
+        <col width="35%">
+    </colgroup>
+    <thread>
+        <tr>
+            <th>Item</th>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Option</th>
+        </tr>
+    </thread>
+    <tbody>
+        {% for item in order.items.all %}
+        <tr>
+            <td>{% if item.item.pizza.crust %}{{ item.item.pizza.crust}} Pizza with {% endif %}
+                {{ item.item.name }}</td>
+            <td>{{ item.item.size }}</td>
+            <td>{{ item.quantity }}</td>
+            <td>{{ item.price }}</td>
+            <td>{% if item.toppings.count > 0 %}
+                    {% for topping in item.toppings.all %}
+                        {% if forloop.last %}
+                            {{ topping.name }}
+                        {% else %}
+                            {{ topping.name }},
+                        {% endif %}
+                    {% endfor %}
+                    {% elif item.extra %}
+                        + Extra Cheese
+                {% endif %}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+
+<br>
+
+<table class="table">
+    <colgroup>
+        <col width="35%">
+        <col width="65%">
+    </colgroup>
+    <tbody>
+        <tr>
+            <td>Subtotal</td>
+            <td>{{ order.subtotal }}</td>
+        </tr>
+        <tr>
+            <td>Contact</td>
+            <td>{{ order.contact }}</td>
+        </tr>
+        <tr>
+            <td>Billing Address</td>
+            <td>{{ order.billing_address }}</td>
+        </tr>
+        <tr>
+            <td>Shipping Address</td>
+            <td>{{ order.shipping_address }}</td>
+        </tr>
+        <tr>
+            <td>Message</td>
+            <td>{{ order.message }}</td>
+        </tr>
+        <tr>
+            <td>status</td>
+            <td>{{ order.status }}</td>
+        </tr>
+    </tbody>
+</table>
+
+{% endif %}
+
+<div class="row">
+    <a href="{% url 'index' %}" class="btn btn-outline-info">Go back to menu</a>
+    <a href="{% url 'manage_order' %}" class="btn btn-outline-info">Go back to order list (management)</a>
+</div>
+
+{% endblock %}
