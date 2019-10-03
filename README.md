@@ -47,7 +47,4 @@ Restaurant managers(admin users) can view today's recently placed orders and upd
 [reviews/tests.py](https://github.com/samyka/Pizzeria/blob/master/reviews/tests.py)
 
 
-## Languages and Tools
-* Languages: Python 3.7, JavaScript ES6
-* Frameworks and Libraries: Django 2.1, Bootstrap, jQuery
-# Pizzeria
+### Screen recording [here](https://youtu.be/XvYri7D-BSs)
